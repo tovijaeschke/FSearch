@@ -1,6 +1,23 @@
 #!/usr/bin/env python3
 
+'''
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                    Version 2, August 10
+
+ Copyright (C) 2018 Tovi Jaeschke (jaeschke@tuta.io)
+
+ Everyone is permitted to copy and distribute verbatim or modified 
+ copies of this license document, and changing it is allowed as long 
+ as the name is changed. 
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+'''
+
 try:
+    import sys
     import os
     import sqlite3
     import tkinter as tk
@@ -11,8 +28,11 @@ except Exception as err:
     exit(1)
 
 LARGE_FONT = ("Verdana", 14)
-
+PATH_SPLIT = "/"
 root = None
+
+if sys.platform == "win32":
+    PATH_SPLIT = "\\"
 
 class SearchTool:
     def __init__(self, master):
@@ -78,7 +98,7 @@ class SearchTool:
             self.txt.insert("end", "Please enter a search term")
             self.txt.config(font=("consolas", 10), state="disabled")
             return
-        conn = sqlite3.connect('Files.db')
+        conn = sqlite3.connect(os.path.join(PATH_SPLIT.join(os.path.realpath(__file__).split(PATH_SPLIT)[:-1]), 'Files.db'))
         cursor = conn.execute("SELECT count(path) FROM Files")
         for row in cursor:
             if row[0] == 0:

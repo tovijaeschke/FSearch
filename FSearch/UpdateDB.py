@@ -1,6 +1,23 @@
 #!/usr/bin/env python3
 
+'''
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+                    Version 2, August 10
+
+ Copyright (C) 2018 Tovi Jaeschke (jaeschke@tuta.io)
+
+ Everyone is permitted to copy and distribute verbatim or modified 
+ copies of this license document, and changing it is allowed as long 
+ as the name is changed. 
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+'''
+
 try:
+    import sys
     import os
     import threading
     import tkinter as tk
@@ -10,13 +27,17 @@ except Exception as err:
     print("Error: " + str(err))
 
 LARGE_FONT = ("Verdana", 14)
-
+PATH_SPLIT = "/"
 app = None
+
+if sys.platform == "win32":
+    PATH_SPLIT = "\\"
 
 def UpdateDB():
     global app
     try:
-        conn = sqlite3.connect('Files.db')
+        conn = sqlite3.connect(os.path.join(PATH_SPLIT.join(os.path.realpath(__file__).split(PATH_SPLIT)[:-1]), 'Files.db'))
+
         conn.execute("DROP TABLE IF EXISTS Files")
         conn.execute("CREATE TABLE Files (path TEXT)")
         for directory, dirnames, filenames in os.walk(os.path.abspath(os.sep)):
@@ -26,10 +47,12 @@ def UpdateDB():
         conn.close()
         app.title.configure(text="Finished updating database")
         app.quitButton.configure(text="Done")
+        return
     except Exception as err:
         conn.close()
         app.title.configure(text="Error: " + str(err))
         app.quitButton.configure(text="Done")
+        return
 
 
 class UpdatingDatabase:
